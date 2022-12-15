@@ -19,7 +19,7 @@ const TaskList = (props) => {
   };
   return <ul className="tasks__list no-bullet">{getTaskListJSX(props)}</ul>;
 };
-
+// WHY DOES TaskList .propTypes LOWERCASE & OTHERS PropTypes.??? c 
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
