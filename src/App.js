@@ -39,7 +39,7 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        <div>{<TaskList tasks={TASKS} toggleButton={toggleButton} />}</div>
+        <div>{<TaskList tasks={tasks} toggleButton={toggleButton} />}</div>
       </main>
     </div>
   );
