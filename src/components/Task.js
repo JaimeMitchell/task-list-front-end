@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './Task.css';
 
 const Task = (props) => {
-  // const [complete, setComplete] = useState(props.isComplete);
+  //function to change css
   const buttonClass = props.isComplete ? 'tasks__item__toggle--completed' : '';
-
+  const buttonRemove = props.id ? 'tasks__item__remove ' : '';
   return (
     <li className="tasks__item">
       <button
@@ -16,7 +16,13 @@ const Task = (props) => {
         {/* {props.id} */}
         {props.title}
       </button>
-      <button className="tasks__item__remove button">x</button>
+
+      <button
+        className={`"button "${buttonRemove}`}
+        onClick={() => props.deleteButton(props.id)}
+      >
+        x
+      </button>
     </li>
   );
 };
@@ -26,6 +32,7 @@ Task.propTypes = {
   title: PropTypes.string.isRequired,
   isComplete: PropTypes.bool.isRequired,
   toggleButton: PropTypes.func.isRequired,
+  deleteButton: PropTypes.func.isRequired,
 };
 // Task.propTypes = {
 //       id: PropTypes.number.isRequired,

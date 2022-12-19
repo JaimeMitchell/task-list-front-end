@@ -13,22 +13,25 @@ const TaskList = (props) => {
           title={task.title}
           isComplete={task.isComplete}
           toggleButton={props.toggleButton}
+          deleteButton={props.deleteButton}
         />
       );
     });
   };
   return <ul className="tasks__list no-bullet">{getTaskListJSX(props)}</ul>;
 };
-// WHY DOES TaskList .propTypes LOWERCASE & OTHERS PropTypes.??? c 
+
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
       isComplete: PropTypes.bool.isRequired,
+      
     })
   ).isRequired,
   toggleButton: PropTypes.func.isRequired,
+  deleteButton: PropTypes.func.isRequired,
 };
 
 export default TaskList;
