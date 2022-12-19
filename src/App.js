@@ -30,6 +30,18 @@ const App = () => {
     );
   };
 
+  const deleteButton = (id) => {
+    setTasks((tasks) =>
+      tasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, id: !task.id, title: !task.title };
+        } else {
+          return task;
+        }
+      })
+    );
+  };
+
   // const toggleButton = () => {
   //   () => setTasks(!tasks);
   // };
@@ -39,7 +51,15 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        <div>{<TaskList tasks={TASKS} toggleButton={toggleButton} />}</div>
+        <div>
+          {
+            <TaskList
+              tasks={tasks}
+              toggleButton={toggleButton}
+              deleteButton={deleteButton}
+            />
+          }
+        </div>
       </main>
     </div>
   );
