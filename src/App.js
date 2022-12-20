@@ -16,7 +16,6 @@ import axios from 'axios';
 //   },
 // ];
 
-// aria notes: displays tasks from back end, but toggle does not update in back end yet.
 const kBaseUrl = 'http://localhost:5000';
 
 const convertFromApi = (apiTask) => {
@@ -28,12 +27,25 @@ const convertFromApi = (apiTask) => {
 
 const getAllTasksApi = () => {
   return axios
-    .get(`${kBaseUrl}/tasks`)
+    .get(`${kBaseUrl}/tasks?sort=asc`)
     .then((response) => {
       return response.data.map(convertFromApi);
     })
     .catch((err) => {
       console.log(err);
+    });
+};
+
+const markCompleteApi = (id, isComplete) => {
+  const endpoint = isComplete ? 'mark_incomplete' : 'mark_complete';
+
+  return axios
+    .patch(`${kBaseUrl}/tasks/${id}/${endpoint}`)
+    .then((response) => {
+      return convertFromApi(response.data.task);
+    })
+    .catch((error) => {
+      console.log(error);
     });
 };
 
@@ -43,7 +55,7 @@ const App = () => {
 
   const getAllTasks = () => {
     return getAllTasksApi().then((tasks) => {
-      console.log(tasks);
+      // console.log(tasks);
       setTasks(tasks);
     });
   };
@@ -52,16 +64,34 @@ const App = () => {
     getAllTasks();
   }, []);
 
+  // const toggleButton = (id) => {
+  //   setTasks((tasks) =>
+  //     tasks.map((task) => {
+  //       if (task.id === id) {
+  //         return { ...task, isComplete: !task.isComplete };
+  //       } else {
+  //         return task;
+  //       }
+  //     })
+  //   );
+  // };
   const toggleButton = (id) => {
-    setTasks((tasks) =>
-      tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, isComplete: !task.isComplete };
-        } else {
-          return task;
-        }
+    const task = tasks.find((task) => task.id === id);
+    return markCompleteApi(id, task.isComplete)
+      .then((newTask) => {
+        setTasks((oldTasks) => {
+          return oldTasks.map((task) => {
+            if (task.id === newTask.id) {
+              return newTask;
+            } else {
+              return task;
+            }
+          });
+        });
       })
-    );
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   // const deleteButton = (id) => {
