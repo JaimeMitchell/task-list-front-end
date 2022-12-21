@@ -6,15 +6,14 @@ import './Task.css';
 const Task = (props) => {
   //function to change css
   const buttonClass = props.isComplete ? 'tasks__item__toggle--completed' : '';
-  const buttonRemove = props.id ? 'tasks__item__remove ': '';
+  const buttonRemove = props.id ? 'tasks__item__remove ' : '';
   return (
     <li className="tasks__item">
       <button
         className={`tasks__item__toggle ${buttonClass}`}
         onClick={() => props.toggleButton(props.id)}
       >
-        {props.id}
-        {props.title}
+        {`${props.id} ${props.title}`}
       </button>
 
       <button
@@ -34,12 +33,5 @@ Task.propTypes = {
   toggleButton: PropTypes.func.isRequired,
   deleteButton: PropTypes.func.isRequired,
 };
-// Task.propTypes = {
-//       id: PropTypes.number.isRequired,
-//       title: PropTypes.string.isRequired,
-//       isComplete: PropTypes.bool.isRequired,
-//   .isRequired,
-//   toggleButton: PropTypes.func.isRequired,
-// };
 
 export default Task;
