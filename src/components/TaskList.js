@@ -18,7 +18,12 @@ const TaskList = (props) => {
       );
     });
   };
-  return <ul className="tasks__list no-bullet">{getTaskListJSX(props)}</ul>;
+  return (
+    <section>
+      <h2>Task List</h2>
+      <ul className="tasks__list no-bullet">{getTaskListJSX(props)}</ul>
+    </section>
+  );
 };
 
 TaskList.propTypes = {
@@ -27,7 +32,6 @@ TaskList.propTypes = {
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
       isComplete: PropTypes.bool.isRequired,
-      
     })
   ).isRequired,
   toggleButton: PropTypes.func.isRequired,

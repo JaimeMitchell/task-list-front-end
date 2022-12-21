@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskList from './components/TaskList.js';
+import TaskForm from './components/TaskForm.js';
 import './App.css';
 
 const kBaseUrl = 'http://127.0.0.1:5000';
@@ -20,6 +21,9 @@ const getTasks = async () => {
   }
 };
 
+const postTask = (task) => {
+  return axios.post(`${kBaseUrl}/tasks`,task).then()
+};
 // function getTasks() {
 //   return axios
 //     .get(`${kBaseUrl}/tasks`)
@@ -29,11 +33,11 @@ const getTasks = async () => {
 //     .catch((error) => console.log(error));
 // }
 
-const updateTask = async (id, markComplete) => {
+const updateTaskApi = async (id, markComplete) => {
   const endpoint = markComplete ? 'mark_complete' : 'mark_incomplete';
 
   try {
-    const response = axios.patch(`${kBaseUrl}/tasks/${endpoint}`);
+    const response = axios.patch(`${kBaseUrl}/tasks/id/${endpoint}`);
     //why no 'await' with this async?
     return taskApiToJson(response.data.task);
   } catch (error) {
@@ -55,6 +59,18 @@ const deleteTask = async (id) => {
 const App = () => {
   const [tasks, setTasks] = useState([]);
 
+  useEffect(() => {
+    refreshTasks();
+  }, []);
+
+  const handleFormSubmit = (task) => {
+    postTask(task)
+      .then(newCat => {
+        setCatData([...catData, newCat])
+      })
+      .catch(e => console.log(e));
+  }
+
   const refreshTasks = async () => {
     try {
       const tasks = await getTasks();
@@ -66,10 +82,6 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    refreshTasks();
-  }, []);
-
   const updateTask = async (id) => {
     const task = task.find((task) => task.id === id);
 
@@ -78,7 +90,7 @@ const App = () => {
     }
 
     try {
-      const newTask = await updateTask(id, !task.isComplete);
+      const newTask = await updateTaskApi(id, !task.isComplete);
 
       setTasks((oldTasks) => {
         return oldTasks.map((task) => {
@@ -112,6 +124,7 @@ const App = () => {
       </header>
       <main>
         <div>
+          <TaskForm />
           {
             <TaskList
               tasks={tasks}
