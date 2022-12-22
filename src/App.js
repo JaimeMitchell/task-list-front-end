@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TaskList from './components/TaskList.js';
 import './App.css';
 import axios from 'axios';
+import TaskForm from './components/TaskForm.js';
 
 // const TASKS = [
 //   {
@@ -36,17 +37,12 @@ const getAllTasksApi = () => {
     });
 };
 
-// const postTask = (task) => {
-//   return axios.post(`${kBaseUrl}/tasks`, task).then();
-// };
-// function getTasks() {
-//   return axios
-//     .get(`${kBaseUrl}/tasks`)
-//     .then((response) => {
-//       return response.data.map(taskApiToJson);
-//     })
-//     .catch((error) => console.log(error));
-// }
+const postTask = (task) => {
+  return axios.post(`${kBaseUrl}/tasks`, task).then((response) => {
+    console.log(response.data);
+    return convertFromApi(response.data);
+  });
+};
 
 const markCompleteApi = (id, isComplete) => {
   const endpoint = isComplete ? 'mark_incomplete' : 'mark_complete';
@@ -74,14 +70,22 @@ const deleteTask = (id) => {
 
 // const handleFormSubmit = (task) => {
 //   postTask(task)
-//     .then((newCat) => {
-//       setCatData([...catData, newCat]);
+//     .then((newTask) => {
+//       setTasks([...tasks, newTask]);
 //     })
 //     .catch((e) => console.log(e));
 // };
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
+
+  const handleFormSubmit = (task) => {
+    postTask(task)
+      .then((newTask) => {
+        setTasks([...tasks, newTask]);
+      })
+      .catch((e) => console.log(e));
+  };
 
   const getAllTasks = () => {
     return getAllTasksApi().then((tasks) => {
@@ -130,6 +134,7 @@ const App = () => {
       </header>
       <main>
         <div>
+          <TaskForm handleFormSubmit={handleFormSubmit} />
           <TaskList
             tasks={tasks}
             toggleButton={toggleButton}
