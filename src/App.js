@@ -36,6 +36,18 @@ const getAllTasksApi = () => {
     });
 };
 
+// const postTask = (task) => {
+//   return axios.post(`${kBaseUrl}/tasks`, task).then();
+// };
+// function getTasks() {
+//   return axios
+//     .get(`${kBaseUrl}/tasks`)
+//     .then((response) => {
+//       return response.data.map(taskApiToJson);
+//     })
+//     .catch((error) => console.log(error));
+// }
+
 const markCompleteApi = (id, isComplete) => {
   const endpoint = isComplete ? 'mark_incomplete' : 'mark_complete';
 
@@ -59,6 +71,14 @@ const deleteTask = (id) => {
       console.log(error);
     });
 };
+
+// const handleFormSubmit = (task) => {
+//   postTask(task)
+//     .then((newCat) => {
+//       setCatData([...catData, newCat]);
+//     })
+//     .catch((e) => console.log(e));
+// };
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -110,13 +130,11 @@ const App = () => {
       </header>
       <main>
         <div>
-          {
-            <TaskList
-              tasks={tasks}
-              toggleButton={toggleButton}
-              deleteButton={deleteButton}
-            />
-          }
+          <TaskList
+            tasks={tasks}
+            toggleButton={toggleButton}
+            deleteButton={deleteButton}
+          />
         </div>
       </main>
     </div>
