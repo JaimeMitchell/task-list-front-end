@@ -49,13 +49,22 @@ const markCompleteApi = (id, isComplete) => {
     });
 };
 
+const deleteTask = (id) => {
+  return axios
+    .delete(`${kBaseUrl}/tasks/${id}`)
+    .then((response) => {
+      return convertFromApi(response.data.task);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 const App = () => {
-  // const [tasks, setTasks] = useState(TASKS);
   const [tasks, setTasks] = useState([]);
 
   const getAllTasks = () => {
     return getAllTasksApi().then((tasks) => {
-      // console.log(tasks);
       setTasks(tasks);
     });
   };
@@ -64,17 +73,6 @@ const App = () => {
     getAllTasks();
   }, []);
 
-  // const toggleButton = (id) => {
-  //   setTasks((tasks) =>
-  //     tasks.map((task) => {
-  //       if (task.id === id) {
-  //         return { ...task, isComplete: !task.isComplete };
-  //       } else {
-  //         return task;
-  //       }
-  //     })
-  //   );
-  // };
   const toggleButton = (id) => {
     const task = tasks.find((task) => task.id === id);
     return markCompleteApi(id, task.isComplete)
@@ -94,29 +92,17 @@ const App = () => {
       });
   };
 
-  // const deleteButton = (id) => {
-  //   setTasks((tasks) =>
-  //     tasks.map((task) => {
-  //       if (task.id === id) {
-  //         return { ...task, id: !task.id, title: !task.title };
-  //       } else {
-  //         return task;
-  //       }
-  //     })
-  //   );
-  // };
-
-  const deleteButton = (id) => {
-    setTasks((tasks) =>
-      tasks.filter((task) => {
-        return task.id !== id;
-      })
-    );
+  const deleteButton = async (id) => {
+    try {
+      await deleteTask(id);
+      setTasks((oldTasks) => {
+        return oldTasks.filter((task) => task.id !== id);
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
-  // const toggleButton = () => {
-  //   () => setTasks(!tasks);
-  // };
   return (
     <div className="App">
       <header className="App-header">
