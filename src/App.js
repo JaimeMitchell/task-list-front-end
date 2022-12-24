@@ -4,6 +4,7 @@ import TaskList from './components/TaskList.js';
 import TaskForm from './components/TaskForm.js';
 import './App.css';
 
+//CRUD API OPERATIONS
 const kBaseUrl = 'http://127.0.0.1:5000';
 
 const taskApiToJson = (task) => {
@@ -21,28 +22,21 @@ const getTasks = async () => {
   }
 };
 
-const postTask = (task) => {
-  return axios.post(`${kBaseUrl}/tasks`,task).then()
+const addTask = (task) => {
+  return axios
+    .post(`${kBaseUrl}/tasks`, task)
+    .then((response) => response.data.task)
+    .catch((err) => console.log(err));
 };
-// function getTasks() {
-//   return axios
-//     .get(`${kBaseUrl}/tasks`)
-//     .then((response) => {
-//       return response.data.map(taskApiToJson);
-//     })
-//     .catch((error) => console.log(error));
-// }
 
 const updateTaskApi = async (id, markComplete) => {
   const endpoint = markComplete ? 'mark_complete' : 'mark_incomplete';
 
   try {
-    const response = axios.patch(`${kBaseUrl}/tasks/id/${endpoint}`);
-    //why no 'await' with this async?
+    const response = await axios.patch(`${kBaseUrl}/tasks/${id}/${endpoint}`);
     return taskApiToJson(response.data.task);
   } catch (error) {
     console.log(error);
-    //why id here but not anywhere in endpoint above???
     throw new Error(`error updating task ${id}`);
   }
 };
@@ -63,13 +57,16 @@ const App = () => {
     refreshTasks();
   }, []);
 
-  const handleFormSubmit = (task) => {
-    postTask(task)
-      .then(newCat => {
-        setCatData([...catData, newCat])
+  const onFormSubmit = (task) => {
+    //adds new task
+    addTask(task)
+      // getting return response which is the task object
+      .then((newTask) => {
+        //update tasks state which is a list of the previous tasks with the new one. DONE.
+        setTasks((prevTasks) => [...prevTasks, newTask]);
       })
-      .catch(e => console.log(e));
-  }
+      .catch((e) => console.log(e));
+  };
 
   const refreshTasks = async () => {
     try {
@@ -83,7 +80,7 @@ const App = () => {
   };
 
   const updateTask = async (id) => {
-    const task = task.find((task) => task.id === id);
+    const task = tasks.find((task) => task.id === id);
 
     if (!task) {
       return;
@@ -124,7 +121,7 @@ const App = () => {
       </header>
       <main>
         <div>
-          <TaskForm />
+          <TaskForm onFormSubmit={onFormSubmit} />
           {
             <TaskList
               tasks={tasks}
